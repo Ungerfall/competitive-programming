@@ -47,6 +47,55 @@ namespace Program
 	{
 		public static void Main(string[] args)
 		{
+			int t = int.Parse(Console.ReadLine().Trim());
+			foreach (var _ in Enumerable.Range(0, t))
+			{
+				string[] line = Console.ReadLine().Trim().Split();
+				int n = int.Parse(line[0]);
+				int x = int.Parse(line[1]);
+				int[] a = Console.ReadLine().Trim().Split().Select(int.Parse).ToArray();
+				int[] aa = new int[n];
+				int[] b = Console.ReadLine().Trim().Split().Select(int.Parse).ToArray();
+				Array.Copy(a, aa, n);
+				Array.Sort(aa);
+				Array.Sort(b);
+				ReadOnlySpan<int> largestAa = aa[^x..^0];
+				bool yes = true;
+				for (int i = 0; i < x; i++)
+				{
+					if (largestAa[i] <= b[i])
+					{
+						yes = false;
+						break;
+					}
+				}
+				
+				if (!yes)
+				{
+					Console.WriteLine("NO");
+					continue;
+				}
+				
+				Console.WriteLine("YES");
+				List<int> bRearrangement = new List<int>();
+				bool[] visited = new bool[n];
+				for (int i = 0; i < n; i++)
+				{
+					for (int j = n - 1; j <= 0; j++)
+					{
+						if (visited[j])
+						{
+							continue;
+						}
+						
+						if (a[i] > b[j])
+						{
+							visited[j] = true;
+							bRearrangement.Add(b[j]);
+						}
+					}
+				}
+			}
 		}
 	}
 }

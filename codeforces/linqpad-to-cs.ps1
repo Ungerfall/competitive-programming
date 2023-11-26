@@ -6,7 +6,7 @@ $startCopying = $false
 # Read each line from the standard input
 $Input | ForEach-Object {
     # Check if the current line contains 'namespace Program'
-    if ($_ -match "namespace Program") {
+    if ((-not $startCopying) -and ($_ -match "using System;")) {
         # Set the flag to start copying
         $startCopying = $true
     }
