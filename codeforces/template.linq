@@ -41,6 +41,13 @@ namespace Program
 	{
 		public static void Main(string[] args)
 		{
+#if LINQPAD
+			string linqpadInput =
+"""
+""";
+			using var stringReader = new StringReader(linqpadInput);
+			Console.SetIn(stringReader);
+#endif
 		}
 	}
 }
