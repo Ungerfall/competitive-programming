@@ -44,12 +44,27 @@ namespace Program
 #if LINQPAD
 			string linqpadInput =
 """
-5
-1 5 5 2
-14 3000000000 1000000000 500000000
-100 20 1 10
-8 120 10 20
-42 280 13 37
+20
+1 1 1 1
+1 1 1 1
+1 2 1 1
+1 1 1 1000000000
+1 999999998 1 1000000000
+1 999999999 1 1000000000
+1 1000000000 1 1000000000
+1 1000000001 1 1000000000
+1 1 1000000000 1
+1 999999998 1000000000 1
+1 999999999 1000000000 1
+1 1000000000 1000000000 1
+1 1000000001 1000000000 1
+1 1 1000000000 1000000000
+1 1999999997 1000000000 1000000000
+1 1999999998 1000000000 1000000000
+1 1999999999 1000000000 1000000000
+1 2000000000 1000000000 1000000000
+1000000000 1 1 1
+1000000000 1142857140 1 1
 """;
 			using var stringReader = new StringReader(linqpadInput);
 			Console.SetIn(stringReader);
@@ -57,47 +72,44 @@ namespace Program
 			int tc = int.Parse(Console.ReadLine().Trim());
 			foreach (var _ in Enumerable.Range(0, tc))
 			{
-				checked
-				{
-					string[] line = Console.ReadLine().Trim().Split().ToArray();
-					int n = int.Parse(line[0]);
-					long p = long.Parse(line[1]);
-					int l = int.Parse(line[2]);
-					int t = int.Parse(line[3]);
-					
-					if (l >= p || t >= p)
-					{
-						Console.WriteLine(0);
-						continue;
-					}
+				string[] line = Console.ReadLine().Trim().Split().ToArray();
+				int n = int.Parse(line[0]);
+				long p = long.Parse(line[1]);
+				int l = int.Parse(line[2]);
+				int t = int.Parse(line[3]);
 
-					int tasks = 1 + ((n - 1) / 7);
-					long study = (long)Math.Ceiling(p / (double)(2 * t + l));
-					if (study < tasks / 2)
+				if (l >= p || t >= p)
+				{
+					Console.WriteLine(n - 1);
+					continue;
+				}
+
+				int tasks = 1 + ((n - 1) / 7);
+				long study = (long)Math.Ceiling(p / (double)(2 * t + (long)l));
+				if (study < tasks / 2)
+				{
+					Console.WriteLine(Math.Max(n - study, 0));
+				}
+				else
+				{
+					if (tasks % 2 == 0)
 					{
-						Console.WriteLine(Math.Max(n - study, 0));
+						p -= tasks / 2 * (2 * t + (long)l);
+						study = tasks / 2;
 					}
 					else
 					{
-						if (tasks % 2 == 0)
-						{
-							p -= tasks / 2 * (2 * t + l);
-							study = tasks / 2;
-						}
-						else
-						{
-							p -= (tasks / 2 * (2 * t + l)) + (t + l);
-							study = (tasks / 2) + 1;
-						}
-						//(new { p, study, tasks, n }).ToString().Dump();
-						if (p > 0)
-						{
-							long days = (long)Math.Ceiling(p / (double)l);
-							study += days;
-						}
-
-						Console.WriteLine(Math.Max(n - study, 0));
+						p -= (tasks / 2 * (2 * t + (long)l)) + (t + (long)l);
+						study = (tasks / 2) + 1;
 					}
+					//(new { p, study, tasks, n }).ToString().Dump();
+					if (p > 0)
+					{
+						long days = (long)Math.Ceiling(p / (double)l);
+						study += days;
+					}
+
+					Console.WriteLine(Math.Max(n - study, 0));
 				}
 			}
 		}

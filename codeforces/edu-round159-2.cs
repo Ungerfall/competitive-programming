@@ -24,12 +24,27 @@ namespace Program
 #if LINQPAD
 			string linqpadInput =
 """
-5
-1 5 5 2
-14 3000000000 1000000000 500000000
-100 20 1 10
-8 120 10 20
-42 280 13 37
+20
+1 1 1 1
+1 1 1 1
+1 2 1 1
+1 1 1 1000000000
+1 999999998 1 1000000000
+1 999999999 1 1000000000
+1 1000000000 1 1000000000
+1 1000000001 1 1000000000
+1 1 1000000000 1
+1 999999998 1000000000 1
+1 999999999 1000000000 1
+1 1000000000 1000000000 1
+1 1000000001 1000000000 1
+1 1 1000000000 1000000000
+1 1999999997 1000000000 1000000000
+1 1999999998 1000000000 1000000000
+1 1999999999 1000000000 1000000000
+1 2000000000 1000000000 1000000000
+1000000000 1 1 1
+1000000000 1142857140 1 1
 """;
 			using var stringReader = new StringReader(linqpadInput);
 			Console.SetIn(stringReader);
@@ -47,12 +62,12 @@ namespace Program
 					
 					if (l >= p || t >= p)
 					{
-						Console.WriteLine(0);
+						Console.WriteLine(n - 1);
 						continue;
 					}
 
 					int tasks = 1 + ((n - 1) / 7);
-					long study = (long)Math.Ceiling(p / (double)(2 * t + l));
+					long study = (long)Math.Ceiling(p / (double)(2 * t + (long)l));
 					if (study < tasks / 2)
 					{
 						Console.WriteLine(Math.Max(n - study, 0));
@@ -61,12 +76,12 @@ namespace Program
 					{
 						if (tasks % 2 == 0)
 						{
-							p -= tasks / 2 * (2 * t + l);
+							p -= tasks / 2 * (2 * t + (long)l);
 							study = tasks / 2;
 						}
 						else
 						{
-							p -= (tasks / 2 * (2 * t + l)) + (t + l);
+							p -= (tasks / 2 * (2 * t + (long)l)) + (t + (long)l);
 							study = (tasks / 2) + 1;
 						}
 						//(new { p, study, tasks, n }).ToString().Dump();
