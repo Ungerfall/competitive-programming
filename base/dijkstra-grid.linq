@@ -21,7 +21,9 @@ void Main()
 4322674655533
 """;
 	Solution s = new(grid);
-	s.FindShortestPath(start: (0, 0), dest: (12, 12)).Dump();
+	var (min, path) = s.FindShortestPath(start: (0, 0), dest: (12, 12));
+	min.Dump();
+	path.Dump();
 }
 public class Solution
 {
@@ -39,16 +41,14 @@ public class Solution
 		{
 			for (int col = 0; col < maxCol; col++)
 			{
-				_grid[row, col] = lines[row][col];
+				_grid[row, col] = (int)Char.GetNumericValue(lines[row][col]);
 			}
 		}
 	}
 
-	public int FindShortestPath((int row, int col) start, (int row, int col) dest)
+	public (int min, bool[,] path) FindShortestPath((int row, int col) start, (int row, int col) dest)
 	{
 		(int rx, int cx)[] dirs = new[] { (0, -1), (0, 1), (-1, 0), (1, 0) };
-		bool[,] visited = new bool[maxRow, maxCol];
-		visited[start.row, start.col] = true;
 		int[,] bestDist = new int[maxRow, maxCol];
 		for (int row = 0; row < maxRow; row++)
 		{
@@ -59,6 +59,8 @@ public class Solution
 		}
 
 		bestDist[start.row, start.col] = 0;
+		(int row, int col)[,] parent = new (int row, int col)[maxRow, maxCol];
+		parent[0, 0] = (0, 0);
 		var heap = new PriorityQueue<(int row, int col), int>();
 		heap.Enqueue(start, priority: 0);
 		while (heap.Count > 0)
@@ -66,7 +68,7 @@ public class Solution
 			var (row, col) = heap.Dequeue();
 			if (row == dest.row && col == dest.col)
 			{
-				return bestDist[row, col];
+				return (bestDist[row, col], reconstructPath(parent, start, dest));
 			}
 
 			foreach (var (rx, cx) in dirs)
@@ -78,21 +80,32 @@ public class Solution
 					continue;
 				}
 
-				if (!visited[rr, cc])
+				int newDist = checked(bestDist[row, col] + _grid[rr, cc]);
+				if (newDist < bestDist[rr, cc])
 				{
-					int newDist = bestDist[row, col] + _grid[rr, cc];
-					if (newDist < bestDist[rr, cc])
-					{
-						bestDist[rr, cc] = newDist;
-						heap.Enqueue((rr, cc), newDist);
-					}
+					bestDist[rr, cc] = newDist;
+					parent[rr, cc] = (row, col);
+					heap.Enqueue((rr, cc), newDist);
 				}
 			}
-
-			visited[row, col] = true;
 		}
 
 		throw new ArgumentException("Shortest path has not been found");
+	}
+
+	private bool[,] reconstructPath((int row, int col)[,] parent, (int row, int col) start, (int row, int col) destination)
+	{
+		bool[,] path = new bool[parent.GetLength(0), parent.GetLength(1)];
+		path[start.row, start.col] = true;
+		path[destination.row, destination.col] = true;
+		var (parentRow, parentCol) = parent[destination.row, destination.col];
+		while ((parentRow, parentCol) != (0, 0))
+		{
+			path[parentRow, parentCol] = true;
+			(parentRow, parentCol) = parent[parentRow, parentCol];
+		}
+
+		return path;
 	}
 }
 
