@@ -44,14 +44,39 @@ namespace Program
 #if LINQPAD
 			string linqpadInput =
 """
+7
+12
+1
+2
+3
+1434
+2024
+200000
 """;
 			using var stringReader = new StringReader(linqpadInput);
 			Console.SetIn(stringReader);
 #endif
 			int t = Scanner.Int();
+			int?[] memo = new int?[200_000 + 1];
+			for (int i = 0; i < 10; i++)
+			{
+				memo[i] = i;
+			}
+			
 			foreach (var _ in Enumerable.Range(0, t))
 			{
-				//
+				int n = Scanner.Int();
+				long sum = 0;
+				if (n < 10)
+				{
+					Console.WriteLine(memo[n]);
+					continue;
+				}
+				
+				for (int i = 10; i < n; i++)
+				{
+										
+				}
 			}
 		}
 	}
