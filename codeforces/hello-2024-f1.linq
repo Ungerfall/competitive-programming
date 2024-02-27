@@ -44,31 +44,35 @@ namespace Program
 #if LINQPAD
 			string linqpadInput =
 """
-4 3
-3 3 3 3
-1 4 2 8
-1000000000000000000 1000000000000000000 1000000000000000000
-4 3 8 1000000000000000000
-2 5 1 1000000000000000000
-3 0 0 1000000000000000000
+5 5
+10 3 8 9 2
+3 4 10 8 1
+1000000000000000000 1000000000000000000 1000000000000000000 1000000000000000000
+5 4 9 1000000000000000000
+1 1 1 1000000000000000000
+2 7 4 1000000000000000000
+4 1 1 1000000000000000000
+1 8 3 1000000000000000000
 """;
 			using var stringReader = new StringReader(linqpadInput);
 			Console.SetIn(stringReader);
 #endif
 			var (n, updates) = Scanner.IntInt();
-			long[] towers = Scanner.Array<long>();
+			long[] towersInitial = Scanner.Array<long>();
 			long[] power = Scanner.Array<long>();
 			long[] pipes = Scanner.Array<long>();
+			long[] towers = new long[n];
 			foreach (var _ in Enumerable.Range(0, updates))
 			{
 				var (p, x, y, z) = Scanner.IntIntIntLong();
-				towers[p - 1] = x;
+				towersInitial[p - 1] = x;
 				power[p - 1] = y;
 				if (p < n - 1)
 				{
 					pipes[p - 1] = z;
 				}
 				
+				Array.Copy(towersInitial, towers, n);
 				long total = 0L;
 				checked
 				{
@@ -89,6 +93,11 @@ namespace Program
 				Console.WriteLine(total);
 			}
 		}
+	}
+	
+	public class SegTree
+	{
+		
 	}
 
 	public static class Scanner

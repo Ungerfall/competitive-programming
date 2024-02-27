@@ -84,18 +84,21 @@ namespace Program
 				int[] b = Scanner.Array<int>();
 				int left = 0;
 				int right = m - 1;
-				Array.Sort(b);
+				Array.Sort(a);
+				Array.Sort(b, (a, b) => b.CompareTo(a));
 				long sum = 0L;
 				for (int i = 0; i < n; i++)
 				{
-					if (Math.Abs(a[i] - b[left]) > Math.Abs(a[i] - b[right]))
+					int absLeft = Math.Abs(a[i] - b[left]);
+					int absRight = Math.Abs(a[i] - b[right]);
+					if (absLeft > absRight)
 					{
-						sum += Math.Abs(a[i] - b[left]);
+						sum += absLeft;
 						left++;
 					}
 					else
 					{
-						sum += Math.Abs(a[i] - b[right]);
+						sum += absRight;
 						right--;
 					}
 				}
