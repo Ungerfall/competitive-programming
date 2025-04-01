@@ -37,9 +37,9 @@ boxCount.Dump();
 boxCountOverlapless.Dump();
 maxBoxCount.Dump();
 
-static int countBoxesForAdjacent(Pile prev, Pile current)
+static int countBoxesForAdjacent(Pile one, Pile another)
 {
-    List<BoxRange> boxes = [prev.Left, prev.Right, current.Left, current.Right];
+    List<BoxRange> boxes = [one.Left, one.Right, another.Left, another.Right];
     boxes.Sort(comparison: (leftRange, rightRange) =>
     {
         if (leftRange.A == rightRange.A)
@@ -49,6 +49,28 @@ static int countBoxesForAdjacent(Pile prev, Pile current)
 
         return leftRange.A.CompareTo(rightRange.A);
     });
+    List<BoxRange> merged = new(capacity: boxes.Count);
+    BoxRange current = boxes[0];
+    for (int i = 1; i < boxes.Count; i++)
+    {
+      BoxRange next = boxes[i];
+      if (next.A > current.B)
+      {
+        merged.Add(current);
+        current = next;
+      }
+      else
+      {
+        current = current with { B = next.B };
+      }
+    }
 
-    return 1;
+    merged.Add(current);
+    int count = 0;
+    foreach (BoxRange br in merged)
+    {
+      count += br.B - br.A + 1;
+    }
+
+    return count;
 }
