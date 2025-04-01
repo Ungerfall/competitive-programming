@@ -16,35 +16,69 @@ using System.Transactions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.Numerics;
 
 public class Program
 {
+	const int MOD = 23;
 	public static void Main(string[] args)
 	{
 		int n = Scanner.Int();
 		int m = Scanner.Int();
 		int[] x = Scanner.Array<int>();
 		int[] b = Scanner.Array<int>();
-		const int mod = 23;
-		char[] abc = new char[23] { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w'};
-		StringBuilder password = new();
-		
-		for (int j = 0; j < m; j++)
+		int[,] v = new int[m, n + 1];
+		for (int i = 0; i < m; i++)
 		{
-			long sum = 0L;
-			int xx = x[j] % mod;
-			
-			for (int i = 1; i <= n; i++)
+			for (int j = 0; j < n; j++)
 			{
-				int pow = (int) System.Numerics.BigInteger.ModPow(xx, n, mod);
-				int abcIx = i % mod;
-				sum += pow;
+				v[i, j] = (int)BigInteger.ModPow(x[i], j, MOD);
+			}
+
+			v[i, n] = b[i];
+		}
+
+		v.Dump();
+		int[] ans = new int[m];
+		for (int i = 0; i < m; i++)
+		{
+			int diag = v[i, i];
+			v[i, i] = 1;
+			for (int j = 0; j < n; j++)
+			{
+				if (i != j)
+				{
+					v[i, j] = (v[i, j] * ModPowInverse(diag, MOD)) % MOD;
+				}
 			}
 			
+			for (int j = 0; j < m; j++)
+			{
+				
+				if (i != j)
+				{
+										
+				}
+			}
 		}
-		
+
+		v.Dump();
+
+
+		StringBuilder password = new StringBuilder();
+		char[] abc = "abcdefghijklmnopqrstuvw".ToCharArray();
+		foreach (int index in ans)
+		{
+			password.Append(abc[index]);
+		}
+
 		Console.WriteLine(password.ToString());
 		Console.Out.Flush();
+	}
+
+	private static int ModPowInverse(int m, int mod)
+	{
+		return (int)BigInteger.ModPow(m, mod - 2, mod);
 	}
 
 	public static class Scanner
