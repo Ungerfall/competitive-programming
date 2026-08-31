@@ -9,3 +9,5 @@ string print = result switch
     _ => result.ToString()
 };
 
+[JsonSerializable(typeof(int[]))]
+internal partial class CorePrimitivesContext : JsonSerializerContext;
