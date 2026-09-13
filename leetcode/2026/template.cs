@@ -1,5 +1,6 @@
 ﻿#!/usr/bin/env dotnet run
 
+using System.Text;
 using System.Text.Json.Serialization;
 
 Solution s = new();
@@ -12,6 +13,7 @@ string print = result switch
 };
 
 [JsonSerializable(typeof(int[]))]
+[JsonSerializable(typeof(int[][]))]
 internal partial class CorePrimitivesContext : JsonSerializerContext;
 
 public static class TemplateExtensions
@@ -41,5 +43,29 @@ public static class TemplateExtensions
                     CorePrimitivesContext.Default.Int32Array)
                 ?? throw new ArgumentNullException();
         }
+
+        public int[][] DeserializeTo2DJaggedArray()
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<int[][]>(
+                    s,
+                    CorePrimitivesContext.Default.Int32ArrayArray)
+                ?? throw new ArgumentNullException();
+        }
+    }
+
+    extension<T>(T[][] array)
+    {
+        public void Print(TextWriter tw)
+        {
+            StringBuilder sb = new();
+            for (int row = 0; row < array.Length; row++)
+            {
+                sb.AppendJoin(',', array[row]);
+                sb.AppendLine();
+            }
+
+            tw.WriteLine(sb.ToString());
+        }
     }
 }
+
