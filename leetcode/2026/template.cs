@@ -16,7 +16,8 @@ internal partial class CorePrimitivesContext : JsonSerializerContext;
 
 public static class TemplateExtensions
 {
-    extension(Dictionary<T, int> counter)
+    extension<T>(Dictionary<T, int> counter)
+        where T : notnull
     {
         public Dictionary<T, int> Increment(T key)
         {
@@ -28,6 +29,17 @@ public static class TemplateExtensions
         {
             counter[key] = counter.GetValueOrDefault(key) - 1;
             return counter;
+        }
+    }
+
+    extension(string s)
+    {
+        public int[] DeserializeToArray()
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<int[]>(
+                    s,
+                    CorePrimitivesContext.Default.Int32Array)
+                ?? throw new ArgumentNullException();
         }
     }
 }
