@@ -66,7 +66,7 @@ public static class TemplateExtensions
         {
             int?[] values = s.DeserializeToArray<int?>(CorePrimitivesContext.Default.NullableInt32Array);
 
-            return buildTree(index: 0, values);
+            return buildTree(index: 0, values) ?? throw new ArgumentNullException();
 
             static TreeNode? buildTree(int index, ReadOnlySpan<int?> values)
             {
@@ -75,12 +75,13 @@ public static class TemplateExtensions
                     return null;
                 }
 
-                if (!values[index].HasValue)
+                int? value = values[index];
+                if (!value.HasValue)
                 {
                     return null;
                 }
 
-                TreeNode node = new(values[index].Value);
+                TreeNode node = new(value.Value);
                 node.left = buildTree(index * 2 + 1, values);
                 node.right = buildTree(index * 2 + 2, values);
 
