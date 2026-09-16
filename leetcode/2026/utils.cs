@@ -18,6 +18,17 @@ public class TreeNode
     public TreeNode(int x) { val = x; }
 }
 
+public class ListNode
+{
+    public int val;
+    public ListNode next;
+    public ListNode(int x)
+    {
+        val = x;
+        next = null;
+    }
+}
+
 public static class TemplateExtensions
 {
     extension<T>(Dictionary<T, int> counter)
@@ -87,6 +98,25 @@ public static class TemplateExtensions
 
                 return node;
             }
+        }
+
+        public ListNode? DeserializeToLinkedList()
+        {
+            int[] values = s.DeserializeToArray();
+            if (values.Length == 0)
+            {
+                return null;
+            }
+
+            ListNode head = new(values[0]);
+            ListNode it = head;
+            for (int i = 1; i < values.Length; i++)
+            {
+                it.next = new(values[i]);
+                it = it.next;
+            }
+
+            return head;
         }
     }
 

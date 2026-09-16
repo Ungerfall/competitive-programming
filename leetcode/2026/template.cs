@@ -8,3 +8,4 @@ using System.Text.Json.Serialization;
 Solution s = new();
 var result = s.TODO(...);
 string print = result.ToString();
+Console.WriteLine(print);
