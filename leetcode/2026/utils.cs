@@ -120,6 +120,26 @@ public static class TemplateExtensions
         }
     }
 
+    extension(ListNode? node)
+    {
+        public void Print(TextWriter tw)
+        {
+            if (node is null)
+            {
+                return;
+            }
+
+            ListNode it = node;
+            while (it is not null)
+            {
+                tw.Write(it.val + ",");
+                it = it.next;
+            }
+
+            tw.WriteLine();
+        }
+    }
+
     extension<T>(T[][] array)
     {
         public void Print(TextWriter tw)
