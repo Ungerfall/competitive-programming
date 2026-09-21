@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "local": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "CONSOLE_IN_STRINGREADER": "true"
+      }
+    }
+  }
+}
+
