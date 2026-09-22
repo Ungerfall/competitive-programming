@@ -77,7 +77,7 @@ public static class TemplateExtensions
         {
             int?[] values = s.DeserializeToArray<int?>(CorePrimitivesContext.Default.NullableInt32Array);
 
-            return buildTree(index: 0, values) ?? throw new ArgumentNullException();
+            return buildTree(index: 0, values.AsSpan()) ?? throw new ArgumentNullException();
 
             static TreeNode? buildTree(int index, ReadOnlySpan<int?> values)
             {
@@ -98,6 +98,49 @@ public static class TemplateExtensions
 
                 return node;
             }
+        }
+
+        public TreeNode DeserializeToBinaryTree()
+        {
+            int?[] values = s.DeserializeToArray<int?>(CorePrimitivesContext.Default.NullableInt32Array);
+
+            if (values == null || values.Length == 0 || !values[0].HasValue)
+            {
+                throw new ArgumentNullException(nameof(values), "Tree array cannot be empty or have a null root.");
+            }
+
+            TreeNode root = new(values[0]!.Value);
+            Queue<TreeNode> queue = [];
+            queue.Enqueue(root);
+
+            int i = 1;
+
+            while (queue.Count > 0 && i < values.Length)
+            {
+                TreeNode current = queue.Dequeue();
+
+                if (i < values.Length)
+                {
+                    if (values[i].HasValue)
+                    {
+                        current.left = new TreeNode(values[i]!.Value);
+                        queue.Enqueue(current.left);
+                    }
+                    i++;
+                }
+
+                if (i < values.Length)
+                {
+                    if (values[i].HasValue)
+                    {
+                        current.right = new TreeNode(values[i]!.Value);
+                        queue.Enqueue(current.right);
+                    }
+                    i++;
+                }
+            }
+
+            return root;
         }
 
         public ListNode? DeserializeToLinkedList()
@@ -137,6 +180,35 @@ public static class TemplateExtensions
             }
 
             tw.WriteLine();
+        }
+    }
+
+    extension(TreeNode root)
+    {
+        public void Print(TextWriter tw)
+        {
+            Queue<TreeNode> toVisit = [];
+            toVisit.Enqueue(root);
+            while (toVisit.Count > 0)
+            {
+                int levelLen = toVisit.Count;
+                for (int i = 0; i < levelLen; i++)
+                {
+                    TreeNode node = toVisit.Dequeue();
+                    tw.Write(node.val + " ");
+                    if (node.left is not null)
+                    {
+                        toVisit.Enqueue(node.left);
+                    }
+
+                    if (node.right is not null)
+                    {
+                        toVisit.Enqueue(node.right);
+                    }
+                }
+
+                tw.WriteLine();
+            }
         }
     }
 
