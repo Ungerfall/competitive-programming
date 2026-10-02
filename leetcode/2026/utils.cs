@@ -8,6 +8,8 @@ using System.Text.Json.Serialization.Metadata;
 [JsonSerializable(typeof(int?[]))]
 [JsonSerializable(typeof(int[]))]
 [JsonSerializable(typeof(int[][]))]
+[JsonSerializable(typeof(string[]))]
+[JsonSerializable(typeof(string))]
 internal partial class CorePrimitivesContext : JsonSerializerContext;
 
 public class TreeNode
