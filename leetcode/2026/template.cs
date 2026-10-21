@@ -5,7 +5,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 
-Solution s = new();
-var result = s.TODO(...);
+Solution solution = new();
+var result = solution.TODO(...);
 string print = result.ToString();
 Console.WriteLine(print);
