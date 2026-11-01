@@ -228,4 +228,19 @@ public static class TemplateExtensions
             tw.WriteLine(sb.ToString());
         }
     }
+
+    extension<T>(IList<IList<T>> values)
+    {
+        public void Print(TextWriter tw)
+        {
+            StringBuilder sb = new();
+            for (int row = 0; row < values.Count; row++)
+            {
+                sb.AppendJoin(',', values[row]);
+                sb.AppendLine();
+            }
+
+            tw.WriteLine(sb.ToString());
+        }
+    }
 }
